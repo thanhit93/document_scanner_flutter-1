@@ -37,7 +37,7 @@ android {
         ndkVersion "21.1.6352462"
         ndk {
             moduleName "Scanner"
-            abiFilters 'armeabi-v7a'
+            // abiFilters 'armeabi-v7a'
         }
     }
 
