@@ -31,11 +31,15 @@ import android.database.Cursor
 import androidx.core.net.toFile
 import com.scanlibrary.ScanActivity
 import com.scanlibrary.ScanConstants
+import com.scanlibrary.RealPathUtils
+import com.droidninja.imageeditengine.ImageEditor
+
 import kotlin.collections.HashMap
 
 
 /** DocumentScannerFlutterPlugin */
-class DocumentScannerFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegistry.ActivityResultListener {
+class DocumentScannerFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
+    PluginRegistry.ActivityResultListener {
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -91,7 +95,7 @@ class DocumentScannerFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityA
         activityPluginBinding = null
     }
 
-    private fun composeIntentArguments(intent:Intent) = mapOf(
+    private fun composeIntentArguments(intent: Intent) = mapOf(
         ScanConstants.SCAN_NEXT_TEXT to "ANDROID_NEXT_BUTTON_LABEL",
         ScanConstants.SCAN_SAVE_TEXT to "ANDROID_SAVE_BUTTON_LABEL",
         ScanConstants.SCAN_ROTATE_LEFT_TEXT to "ANDROID_ROTATE_LEFT_LABEL",
@@ -105,13 +109,13 @@ class DocumentScannerFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityA
         ScanConstants.SCAN_CANT_CROP_ERROR_MESSAGE to "ANDROID_CANT_CROP_ERROR_MESSAGE",
         ScanConstants.SCAN_OK_LABEL to "ANDROID_OK_LABEL"
     ).entries.filter { call.hasArgument(it.value) && call.argument<String>(it.value) != null }.forEach {
-        intent.putExtra(it.key,  call.argument<String>(it.value))
+        intent.putExtra(it.key, call.argument<String>(it.value))
     }
 
     private fun camera() {
         activityPluginBinding?.activity?.apply {
             val intent = Intent(this, ScanActivity::class.java)
-            intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE,  ScanConstants.OPEN_CAMERA)
+            intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, ScanConstants.OPEN_CAMERA)
             composeIntentArguments(intent)
             startActivityForResult(intent, SCAN_REQUEST_CODE)
         }
@@ -148,9 +152,15 @@ class DocumentScannerFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 if (requestCode == SCAN_REQUEST_CODE) {
                     activityPluginBinding?.activity?.apply {
                         val uri = data!!.extras!!.getParcelable<Uri>(ScanConstants.SCANNED_RESULT)
-                        println(uri)
-                        result?.success(getRealPathFromUri(activityPluginBinding!!.activity,uri))
+//                        result?.success(getRealPathFromUri(activityPluginBinding!!.activity,uri))
+                        val filePath: String = RealPathUtils.getPath(activityPluginBinding!!.activity, uri)
+                        ImageEditor.Builder(activityPluginBinding!!.activity, filePath)
+                            .open()
                     }
+                }
+                if (requestCode == ImageEditor.RC_IMAGE_EDITOR && data != null) {
+                    val imagePath: String = data!!.getStringExtra(ImageEditor.EXTRA_EDITED_PATH)
+                    result?.success(imagePath)
                 }
                 true
             }
