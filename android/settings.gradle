@@ -1,5 +1,5 @@
 rootProject.name = 'document_scanner_flutter'
-include ':scanlibrary'
-project(':scanlibrary').projectDir = new File('libs/scanlibrary')
-include ':imageeditengine'
-project(':imageeditengine').projectDir = new File('libs/imageeditengine')
+//include ':scanlibrary'
+//project(':scanlibrary').projectDir = new File('libs/scanlibrary')
+//include ':imageeditengine'
+//project(':imageeditengine').projectDir = new File('libs/imageeditengine')
