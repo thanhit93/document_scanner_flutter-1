@@ -65,6 +65,6 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:22.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.github.thanhit93.AndroidDocumentScanLibrary:scanlibrary:v0.0.6'
-    implementation 'com.github.thanhit93.AndroidDocumentScanLibrary:imageeditengine:v0.0.6'
+    implementation 'com.github.thanhit93.AndroidDocumentScanLibrary:scanlibrary:0.0.6'
+    implementation 'com.github.thanhit93.AndroidDocumentScanLibrary:imageeditengine:0.0.6'
 }
