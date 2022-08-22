@@ -68,6 +68,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
 //    implementation 'com.github.thanhit93.AndroidDocumentScanLibrary:scanlibrary:v0.0.5'
 //    implementation 'com.github.thanhit93.AndroidDocumentScanLibrary:imageeditengine:v0.0.5'
-    debugImplementation files('libs/imageeditengine-debug.aar')
-    debugImplementation files('libs/scanlibrary-debug.aar')
+    implementation project(':imageeditengine')
+    implementation project(':scanlibrary')
 }
