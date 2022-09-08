@@ -1,5 +1,5 @@
 /// To Configure File source to get Image from
-enum ScannerFileSource { CAMERA, GALLERY }
+enum ScannerFileSource { CAMERA, GALLERY, PASSPORT }
 
 /// To configure Android Scanner Labels
 enum ScannerLabelsConfig {
@@ -17,6 +17,9 @@ enum ScannerLabelsConfig {
   ANDROID_CANT_CROP_ERROR_MESSAGE,
   ANDROID_OK_LABEL,
   ANDROID_IS_PASSPORT,
+  ANDROID_TITLE_PASSPORT_POPUP,
+  ANDROID_YES_LABEL_PASSPORT_POPUP,
+  ANDROID_NO_LABEL_PASSPORT_POPUP,
 
   /// Unviersal Labels config
   PDF_GALLERY_EMPTY_TITLE,

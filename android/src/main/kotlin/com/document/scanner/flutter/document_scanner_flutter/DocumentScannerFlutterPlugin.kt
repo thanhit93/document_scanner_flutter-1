@@ -26,7 +26,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import android.R.attr.data
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.database.Cursor
 import androidx.core.net.toFile
 import com.scanlibrary.ScanActivity
@@ -35,9 +37,6 @@ import com.scanlibrary.RealPathUtils
 import com.droidninja.imageeditengine.ImageEditor
 import devliving.online.cvscanner.CVScanner
 import devliving.online.cvscanner.util.Util
-
-import kotlin.collections.HashMap
-
 
 /** DocumentScannerFlutterPlugin */
 class DocumentScannerFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
@@ -83,6 +82,9 @@ class DocumentScannerFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityA
             "gallery" -> {
                 gallery()
             }
+            "passport" -> {
+                passport()
+            }
             else -> {
                 result.notImplemented()
             }
@@ -116,15 +118,47 @@ class DocumentScannerFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityA
         intent.putExtra(it.key, call.argument<String>(it.value))
     }
 
+    private fun passport() {
+        activityPluginBinding?.activity?.apply {
+            val alertDialog = AlertDialog.Builder(this)
+            val titlePassport = "ANDROID_TITLE_PASSPORT_POPUP"
+            val yesLabelPassport = "ANDROID_YES_LABEL_PASSPORT_POPUP"
+            val noLabelPassport = "ANDROID_NO_LABEL_PASSPORT_POPUP"
+
+            var title = "Are you scanning a Passport?"
+            var yesLabel = "Yes"
+            var noLabel = "No"
+            if (call.hasArgument(titlePassport) && call.argument<String>(titlePassport) != null) {
+                title = call.argument<String>(titlePassport)!!
+            }
+            if (call.hasArgument(yesLabelPassport) && call.argument<String>(yesLabelPassport) != null) {
+                yesLabel = call.argument<String>(yesLabelPassport)!!
+            }
+            if (call.hasArgument(noLabelPassport) && call.argument<String>(noLabelPassport) != null) {
+                noLabel = call.argument<String>(noLabelPassport)!!
+            }
+            alertDialog.apply {
+                setMessage(title)
+                setPositiveButton(yesLabel) { _: DialogInterface?, _: Int ->
+                    activityPluginBinding?.activity?.apply {
+                        CVScanner.startScanner(this, true, REQ_SCAN)
+                    }
+                }
+                setNegativeButton(noLabel) { _, _ ->
+                    activityPluginBinding?.activity?.apply {
+                        CVScanner.startScanner(this, false, REQ_SCAN)
+                    }
+                }
+            }.create().show()
+        }
+    }
+
     private fun camera() {
         activityPluginBinding?.activity?.apply {
-//            val intent = Intent(this, ScanActivity::class.java)
-//            intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, ScanConstants.OPEN_CAMERA)
-//            composeIntentArguments(intent)
-//            startActivityForResult(intent, SCAN_REQUEST_CODE)
-            val ketPassport = "ANDROID_IS_PASSPORT"
-            val isPassport = call.hasArgument(ketPassport) && call.argument<String>(ketPassport) == "1"
-            CVScanner.startScanner(this, isPassport, REQ_SCAN)
+            val intent = Intent(this, ScanActivity::class.java)
+            intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, ScanConstants.OPEN_CAMERA)
+            composeIntentArguments(intent)
+            startActivityForResult(intent, SCAN_REQUEST_CODE)
         }
     }
 
