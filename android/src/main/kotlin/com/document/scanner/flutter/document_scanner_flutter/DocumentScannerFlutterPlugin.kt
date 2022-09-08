@@ -122,7 +122,8 @@ class DocumentScannerFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityA
 //            intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, ScanConstants.OPEN_CAMERA)
 //            composeIntentArguments(intent)
 //            startActivityForResult(intent, SCAN_REQUEST_CODE)
-            val isPassport = true
+            val ketPassport = "ANDROID_IS_PASSPORT"
+            val isPassport = call.hasArgument(ketPassport) && call.argument<String>(ketPassport) == "1"
             CVScanner.startScanner(this, isPassport, REQ_SCAN)
         }
     }
@@ -165,19 +166,21 @@ class DocumentScannerFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityA
                     }
                 }
                 if (requestCode == REQ_SCAN) {
-                    if (data != null && data.getExtras() != null) {
+                    if (data?.extras != null) {
                         activityPluginBinding?.activity?.apply {
-                            val path: String = data.getStringExtra(CVScanner.RESULT_IMAGE_PATH)
-                            val file = File(path)
-                            val imageUri: Uri = Util.getUriForFile(activityPluginBinding!!.activity, file)
-                            CVScanner.startManualCropper(activityPluginBinding!!.activity, imageUri, REQ_CROP_IMAGE)
+                            val path: String? = data.getStringExtra(CVScanner.RESULT_IMAGE_PATH)
+                            path?.let {
+                                val file = File(it)
+                                val imageUri: Uri = Util.getUriForFile(activityPluginBinding!!.activity, file)
+                                CVScanner.startManualCropper(activityPluginBinding!!.activity, imageUri, REQ_CROP_IMAGE)
+                            }
                         }
                     }
                 }
                 if (requestCode == REQ_CROP_IMAGE) {
-                    if (data != null && data.getExtras() != null) {
+                    if (data?.extras != null) {
                         activityPluginBinding?.activity?.apply {
-                            val filePath: String = data.getStringExtra(CVScanner.RESULT_IMAGE_PATH)
+                            val filePath: String? = data.getStringExtra(CVScanner.RESULT_IMAGE_PATH)
                             ImageEditor.Builder(activityPluginBinding!!.activity, filePath)
                                 .open()
                         }
