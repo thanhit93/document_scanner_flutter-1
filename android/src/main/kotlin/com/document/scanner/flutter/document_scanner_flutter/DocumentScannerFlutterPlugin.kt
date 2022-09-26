@@ -120,7 +120,8 @@ class DocumentScannerFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityA
 
     private fun passport() {
         activityPluginBinding?.activity?.apply {
-            val alertDialog = AlertDialog.Builder(this)
+            CVScanner.startScanner(this, false, REQ_SCAN)
+            /*val alertDialog = AlertDialog.Builder(this)
             val titlePassport = "ANDROID_TITLE_PASSPORT_POPUP"
             val yesLabelPassport = "ANDROID_YES_LABEL_PASSPORT_POPUP"
             val noLabelPassport = "ANDROID_NO_LABEL_PASSPORT_POPUP"
@@ -149,7 +150,7 @@ class DocumentScannerFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityA
                         CVScanner.startScanner(this, false, REQ_SCAN)
                     }
                 }
-            }.create().show()
+            }.create().show()*/
         }
     }
 
